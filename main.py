@@ -1,6 +1,22 @@
 from tkinter import *
 import inGame
+import random
 
+capital = {"balance" : 1000000000, "investment" : 0}
+current = {1 : 0, 2 : 0, 3 : 0, 4 : 0}
+item = {1 : 100000, 2 : 200000, 3 : 300000, 4 : 400000}
+
+def buy(item_num, buy_num, current, capital):
+    current[item_num] += buy_num
+    capital["balance"] -= buy_num * item[item_num]
+
+def report(item_num, current, capital):
+    for i in range(0, 4):
+        fluctuation = random.randint(1, 10)
+        if(fluctuation <= 5):
+            current[i] *= (fluctuation * 10) + 1
+        else:
+            current[i] *= 1 - ((10-fluctuation) * 10)
 
 def goGame():
     start_page.destroy()
