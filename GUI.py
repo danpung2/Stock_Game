@@ -2,6 +2,7 @@ from tkinter import*
 import tkinter.font as tkFont
 from functools import partial
 import random
+import time
 
 
 def gameStart(start_date, balance):
@@ -14,12 +15,21 @@ def gameStart(start_date, balance):
     window.total_current_cost = 0  
     window.total = balance
 
+    var1 = StringVar()
+    var1.set(window.total)
+    var2 = StringVar()
+    var2.set(window.balance)
+    var3 = StringVar()
+    var3.set(window.total_purchase_cost)
+
     window.item = {1 : 100000, 2 : 200000, 3 : 300000, 4 : 400000}
     window.investment = {1 : 0, 2 : 0, 3 : 0, 4 : 0}
 
-    def update(total, balance):
+    def update_window(total, balance):
         window.total = total
         window.balance = balance
+        window.update()
+        time.sleep(0.05)
 
     def buy(item_num, buy_num, balance, total):
         if(balance < (buy_num) * window.item[item_num]):
@@ -30,10 +40,10 @@ def gameStart(start_date, balance):
         for i in range(1, 5):
             total += window.investment[i]
         total += balance
-        update(total, balance)
+        update_window(total, balance)
 
     def rate_of_fluctuation(investment, balance, total, total_current_cost):
-        for i in range(0, 4):
+        for i in range(1, 5):
             fluctuation = random.randint(1, 10)
             if(fluctuation <= 5):
                 investment[i] *= (fluctuation * 10)/100 + 1
@@ -83,7 +93,7 @@ def gameStart(start_date, balance):
     #총 자본, 지갑, 투자액
 
     capital_lb1 = Label(window,
-                        text='총 자본    : {0}'.format(window.total),
+                        text='총 자본    : ' + var1.get(),
                         font=capitalfont)
     capital_lb1.place(x=700, y=50)
 
@@ -94,7 +104,7 @@ def gameStart(start_date, balance):
 
 
     wallet_lb1 = Label(window,
-                        text='지갑         : {0}'.format(window.balance),
+                        text='지갑         : ' + var2.get(),
                         font=capitalfont)
     wallet_lb1.place(x=700, y=85)
 
@@ -105,7 +115,7 @@ def gameStart(start_date, balance):
 
 
     investment_lb1 = Label(window,
-                        text='총 투자액 : {0}'.format(window.total_purchase_cost),
+                        text='총 투자액 : ' + var3.get(),
                         font=capitalfont)
     investment_lb1.place(x=700, y=120)
 

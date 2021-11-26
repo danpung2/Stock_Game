@@ -24,7 +24,7 @@ start_date_btn3 = Radiobutton(start_page, text = "12일", variable=start_date, v
 money_txt = Label(start_page, text='금액 입력 or 선택', font=('', 20), width='10')
 start_capital_btn1 = Radiobutton(start_page, text = "1,000,000원", variable=balance, value = 1000000)
 start_capital_btn2 = Radiobutton(start_page, text = "2,000,000원", variable=balance, value = 2000000)
-start_capital_btn3 = Radiobutton(start_page, text = "3,000,000원", variable=balance, value=3000000)
+start_capital_btn3 = Radiobutton(start_page, text = "3,000,000원", variable=balance, value = 3000000)
 
 logo.place(x=220, y=180)
 start_btn.place(x=240, y=240)
