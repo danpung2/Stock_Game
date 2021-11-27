@@ -2,64 +2,32 @@ from tkinter import*
 import tkinter.font as tkFont
 from functools import partial
 import random
-import time
-
 
 def gameStart(start_date, balance):
     window = Tk()
     window.geometry('1200x800')
     window.title('투자 게임')
 
-    window.balance = balance
+    window.balance = 0
     window.total_purchase_cost = 0
     window.total_current_cost = 0  
-    window.total = balance
+    window.total = 0
 
-    var1 = StringVar()
-    var1.set(window.total)
+    var1 = StringVar()    
     var2 = StringVar()
-    var2.set(window.balance)
     var3 = StringVar()
-    var3.set(window.total_purchase_cost)
+
+    if(window.total_purchase_cost == 0):
+        window.balance = balance
+        window.total_purchase_cost = 0
+        window.total_current_cost = 0  
+        window.total = balance
+        var1.set(window.total)
+        var2.set(window.balance)
+        var3.set(window.total_purchase_cost)
 
     window.item = {1 : 100000, 2 : 200000, 3 : 300000, 4 : 400000}
     window.investment = {1 : 0, 2 : 0, 3 : 0, 4 : 0}
-
-    def update_window(total, balance):
-        window.total = total
-        window.balance = balance
-        window.update()
-        time.sleep(0.05)
-
-    def buy(item_num, buy_num, balance, total):
-        if(balance < (buy_num) * window.item[item_num]):
-            return 0, 0
-        window.investment[item_num] += buy_num * window.item[item_num]
-        window.total_purchase_cost += buy_num * window.item[item_num]
-        balance -= buy_num * window.item[item_num]
-        for i in range(1, 5):
-            total += window.investment[i]
-        total += balance
-        update_window(total, balance)
-
-    def rate_of_fluctuation(investment, balance, total, total_current_cost):
-        for i in range(1, 5):
-            fluctuation = random.randint(1, 10)
-            if(fluctuation <= 5):
-                investment[i] *= (fluctuation * 10)/100 + 1
-                window.item[i] *= (fluctuation * 10)/100 + 1
-            else:
-                investment[i] *= 1 - ((10-fluctuation) * 10)/100
-                window.item[i] *= 1 - ((10-fluctuation) * 10)/100
-        for i in range(1, 5):
-            total += investment[i]
-            total_current_cost += investment[i]
-        total += balance
-        return total, total_current_cost
-
-    def change_to_int(item_num, buy_num, balance, total):
-        buy_num_int = int(buy_num.get())
-        buy(item_num, buy_num_int, balance, total)
 
     canvas = Canvas(window)
 
@@ -93,7 +61,7 @@ def gameStart(start_date, balance):
     #총 자본, 지갑, 투자액
 
     capital_lb1 = Label(window,
-                        text='총 자본    : ' + var1.get(),
+                        text = '총 자본    : ' + var1.get(),
                         font=capitalfont)
     capital_lb1.place(x=700, y=50)
 
@@ -104,7 +72,7 @@ def gameStart(start_date, balance):
 
 
     wallet_lb1 = Label(window,
-                        text='지갑         : ' + var2.get(),
+                        text = '지갑         : ' + var2.get(),
                         font=capitalfont)
     wallet_lb1.place(x=700, y=85)
 
@@ -115,7 +83,7 @@ def gameStart(start_date, balance):
 
 
     investment_lb1 = Label(window,
-                        text='총 투자액 : ' + var3.get(),
+                        text = '총 투자액 : '+ var3.get(),
                         font=capitalfont)
     investment_lb1.place(x=700, y=120)
 
@@ -124,6 +92,42 @@ def gameStart(start_date, balance):
     #                 font=capitalfont)
     # investment_lb2.place(x=850, y=120)
 
+    def buy(item_num, buy_num, balance, total):
+        buy_num_int = int(buy_num.get())
+        if(balance < (buy_num_int) * window.item[item_num]):
+            return
+        else:
+            total = 0
+            window.investment[item_num] += buy_num_int * window.item[item_num]
+            window.total_purchase_cost += buy_num_int * window.item[item_num]
+            balance -= buy_num_int * window.item[item_num]
+            for i in range(1, 5):
+                total += window.investment[i]
+            total += balance
+            window.balance = balance
+            capital_lb1.configure(text = '총 자본    : {0}'.format(total))
+            wallet_lb1.configure(text = '지갑         : {0}'.format(window.balance))
+            investment_lb1.configure(text = '총 투자액 : {0}'.format(window.total_purchase_cost))
+        num_ent1.delete(0, END)
+        num_ent2.delete(0, END)
+        num_ent3.delete(0, END)
+        num_ent4.delete(0, END)
+        return window.balance
+
+    def rate_of_fluctuation(investment, balance, total, total_current_cost):
+        for i in range(1, 5):
+            fluctuation = random.randint(1, 10)
+            if(fluctuation <= 5):
+                investment[i] *= (fluctuation * 10)/100 + 1
+                window.item[i] *= (fluctuation * 10)/100 + 1
+            else:
+                investment[i] *= 1 - ((10-fluctuation) * 10)/100
+                window.item[i] *= 1 - ((10-fluctuation) * 10)/100
+        for i in range(1, 5):
+            total += investment[i]
+            total_current_cost += investment[i]
+        total += balance
+        return total, total_current_cost
 
     #리포트
 
@@ -191,6 +195,9 @@ def gameStart(start_date, balance):
             rate_lb.configure(color='blue')
 
     buy_num_first = StringVar()
+    buy_num_second = StringVar()
+    buy_num_third = StringVar()
+    buy_num_fourth = StringVar()
 
     # first set
 
@@ -226,7 +233,7 @@ def gameStart(start_date, balance):
                     height=2,
                     activebackground='blue',
                     activeforeground='white',
-                    command=partial(change_to_int, 1, buy_num_first, window.balance, window.total),
+                    command=partial(buy, 1, buy_num_first, window.balance, window.total),
                     font=tradefont)
     buy_bt1.place(x=400, y=300)
 
@@ -255,7 +262,8 @@ def gameStart(start_date, balance):
                     font=buyLBfont)
     buy_lb2.place(x=20, y=392)
 
-    current_ent2 = Entry(window,
+    current_ent2 = Label(window,
+                        text=window.item[2],
                         justify='center',
                         font=tradefont)
     current_ent2.place(x=150,
@@ -265,6 +273,7 @@ def gameStart(start_date, balance):
 
     num_ent2 = Entry(window,
                     justify='center',
+                    textvariable=buy_num_second,
                     font=tradefont)
     num_ent2.place(x=310,
                 y=390,
@@ -277,7 +286,7 @@ def gameStart(start_date, balance):
                     height=2,
                     activebackground='blue',
                     activeforeground='white',
-                    command=buybtclick,
+                    command=partial(buy, 2, buy_num_second, window.balance, window.total),
                     font=tradefont)
     buy_bt2.place(x=400, y=390)
 
@@ -306,7 +315,8 @@ def gameStart(start_date, balance):
                     font=buyLBfont)
     buy_lb3.place(x=20, y=482)
 
-    current_ent3 = Entry(window,
+    current_ent3 = Label(window,
+                        text=window.item[3],
                         justify='center',
                         font=tradefont)
     current_ent3.place(x=150,
@@ -316,6 +326,7 @@ def gameStart(start_date, balance):
 
     num_ent3 = Entry(window,
                     justify='center',
+                    textvariable=buy_num_third,
                     font=tradefont)
     num_ent3.place(x=310,
                 y=480,
@@ -328,7 +339,7 @@ def gameStart(start_date, balance):
                     height=2,
                     activebackground='blue',
                     activeforeground='white',
-                    command=buybtclick,
+                    command=partial(buy, 3, buy_num_third, window.balance, window.total),
                     font=tradefont)
     buy_bt3.place(x=400, y=480)
 
@@ -357,7 +368,8 @@ def gameStart(start_date, balance):
                     font=buyLBfont)
     buy_lb4.place(x=20, y=572)
 
-    current_ent4 = Entry(window,
+    current_ent4 = Label(window,
+                        text=window.item[4],
                         justify='center',
                         font=tradefont)
     current_ent4.place(x=150,
@@ -367,6 +379,7 @@ def gameStart(start_date, balance):
 
     num_ent4 = Entry(window,
                     justify='center',
+                    textvariable=buy_num_fourth,
                     font=tradefont)
     num_ent4.place(x=310,
                 y=570,
@@ -379,7 +392,7 @@ def gameStart(start_date, balance):
                     height=2,
                     activebackground='blue',
                     activeforeground='white',
-                    command=buybtclick,
+                    command=partial(buy, 4, buy_num_fourth, window.balance, window.total),
                     font=tradefont)
     buy_bt4.place(x=400, y=570)
 
