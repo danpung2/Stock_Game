@@ -185,12 +185,60 @@ def gameStart(start_date, start_balance):
 
     rate = 0
     rate_lb = Button
+    
+    #set1 buttonstate
 
+    def buybtclick1():
+        buy_bt1.configure(bg="steelblue", fg="white")
+        sell_bt1.configure(bg="lightgray", fg="black")
 
-    def buybtclick(self):
-        if self['state'] == 'normal':
-            self['state'] == 'active'
+    def sellbtclick1():
+        sell_bt1.configure(bg="tomato", fg="white")
+        buy_bt1.configure(bg="lightgray", fg="black")
 
+    #set2 buttonstate
+
+    def buybtclick2():
+        buy_bt2.configure(bg="steelblue", fg="white")
+        sell_bt2.configure(bg="lightgray", fg="black")
+
+    def sellbtclick2():
+        sell_bt2.configure(bg="tomato", fg="white")
+        buy_bt2.configure(bg="lightgray", fg="black")
+
+    #set3 buttonstate
+
+    def buybtclick3():
+        buy_bt3.configure(bg="steelblue", fg="white")
+        sell_bt3.configure(bg="lightgray", fg="black")
+
+    def sellbtclick3():
+        sell_bt3.configure(bg="tomato", fg="white")
+        buy_bt3.configure(bg="lightgray", fg="black")
+
+    #set4 buttonstate
+
+    def buybtclick4():
+        buy_bt4.configure(bg="steelblue", fg="white")
+        sell_bt4.configure(bg="lightgray", fg="black")
+
+    def sellbtclick4():
+        sell_bt4.configure(bg="tomato", fg="white")
+        buy_bt4.configure(bg="lightgray", fg="black")
+
+    #reset buttonstate
+
+    def btreset():
+        buy_bt1.configure(bg="lightgray", fg="black")
+        sell_bt1.configure(bg="lightgray", fg="black")
+        buy_bt2.configure(bg="lightgray", fg="black")
+        sell_bt2.configure(bg="lightgray", fg="black")
+        buy_bt3.configure(bg="lightgray", fg="black")
+        sell_bt3.configure(bg="lightgray", fg="black")
+        buy_bt4.configure(bg="lightgray", fg="black")
+        sell_bt4.configure(bg="lightgray", fg="black")
+        
+    #ratestate
 
     def ratecolor(rate_lb):
         if rate < 0:
@@ -237,7 +285,8 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='blue',
                     activeforeground='white',
-                    command=partial(buy, 1, buy_num_first, balance, total, total_purchase_cost, balance),
+                    bg="lightgray",
+                    command=lambda:[partial(buy, 1, buy_num_first, balance, total, total_purchase_cost, balance), buybtclick1()],
                     font=tradefont)
     buy_bt1.place(x=400, y=300)
 
@@ -245,9 +294,8 @@ def gameStart(start_date, start_balance):
                     text='판매',
                     width=6,
                     height=2,
-                    activebackground='red',
-                    activeforeground='white',
-                    command=buybtclick,
+                    bg="lightgray",
+                    command=lambda:[sellbtclick1()],
                     font=tradefont)
     sell_bt1.place(x=500, y=300)
 
@@ -290,7 +338,8 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='blue',
                     activeforeground='white',
-                    command=partial(buy, 2, buy_num_second, balance, total, total_purchase_cost, balance),
+                    bg="lightgray",
+                    command=lambda:[partial(buy, 2, buy_num_second, balance, total, total_purchase_cost, balance), buybtclick2()],
                     font=tradefont)
     buy_bt2.place(x=400, y=390)
 
@@ -298,9 +347,8 @@ def gameStart(start_date, start_balance):
                     text='판매',
                     width=6,
                     height=2,
-                    activebackground='red',
-                    activeforeground='white',
-                    command=buybtclick,
+                    bg="lightgray",
+                    command=lambda:[sellbtclick2()],
                     font=tradefont)
     sell_bt2.place(x=500, y=390)
 
@@ -343,7 +391,8 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='blue',
                     activeforeground='white',
-                    command=partial(buy, 3, buy_num_third, balance, total, total_purchase_cost, balance),
+                    bg="lightgray",
+                    command=lambda:[partial(buy, 3, buy_num_third, balance, total, total_purchase_cost, balance),buybtclick3()],
                     font=tradefont)
     buy_bt3.place(x=400, y=480)
 
@@ -351,9 +400,8 @@ def gameStart(start_date, start_balance):
                     text='판매',
                     width=6,
                     height=2,
-                    activebackground='red',
-                    activeforeground='white',
-                    command=buybtclick,
+                    bg="lightgray",
+                    command=lambda:[sellbtclick3()],
                     font=tradefont)
     sell_bt3.place(x=500, y=480)
 
@@ -394,9 +442,8 @@ def gameStart(start_date, start_balance):
                     text='구매',
                     width=6,
                     height=2,
-                    activebackground='blue',
-                    activeforeground='white',
-                    command=partial(buy, 4, buy_num_fourth, balance, total, total_purchase_cost, balance),
+                    bg="lightgray",
+                    command=lambda:[partial(buy, 4, buy_num_third, balance, total, total_purchase_cost, balance),buybtclick4()],
                     font=tradefont)
     buy_bt4.place(x=400, y=570)
 
@@ -404,9 +451,8 @@ def gameStart(start_date, start_balance):
                     text='판매',
                     width=6,
                     height=2,
-                    activebackground='red',
-                    activeforeground='white',
-                    command=buybtclick,
+                    bg="lightgray",
+                    command=lambda:[sellbtclick4()],
                     font=tradefont)
     sell_bt4.place(x=500, y=570)
 
@@ -422,7 +468,7 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='black',
                     activeforeground='white',
-                    #command=
+                    command=lambda:[btreset()],
                     font=tradefont)
     next_bt.place(x=400, y=670)
 
