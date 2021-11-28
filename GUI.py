@@ -130,16 +130,16 @@ def gameStart(start_date, start_balance):
         num_ent3.delete(0, END)
         num_ent4.delete(0, END)
     
-    def cell(item_num, cell_num, investment_num, total, total_purchase_cost, balance):
-        cell_num_int=int(cell_num.get())
-        if(investment_num < cell_num_int):
+    def sell(item_num, cell_num, investment_num, total, total_purchase_cost, balance):
+        sell_num_int=int(cell_num.get())
+        if(investment_num < sell_num_int):
             return
         else:
             window.total = 0
-            investment_num[item_num] -= cell_num_int
-            investment[item_num] -= cell_num_int * item[item_num]
-            total_purchase_cost -= cell_num_int * item[item_num]
-            balance += cell_num_int * item[item_num]
+            investment_num[item_num] -= sell_num_int
+            investment[item_num] -= sell_num_int * item[item_num]
+            total_purchase_cost -= sell_num_int * item[item_num]
+            balance += sell_num_int * item[item_num]
             for i in range(1, 5):
                 total += investment[i]
             window.total += balance
@@ -158,7 +158,7 @@ def gameStart(start_date, start_balance):
             time_num=-1
         time_num+=1
 
-    def rate_of_fluctuation(investment, balance, total, total_current_cost):
+    def rate_of_fluctuation(balance, total, total_current_cost):
         for i in range(1, 5):
             fluctuation = random.randint(1, 10)
             if(fluctuation <= 5):
@@ -334,7 +334,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(cell, 1, buy_num_first, investment_num[1], total, total_purchase_cost, balance),sellbtclick1()],
+                    command=lambda:[partial(sell, 1, buy_num_first, investment_num[1], total, total_purchase_cost, balance),sellbtclick1()],
                     font=tradefont)
     sell_bt1.place(x=500, y=300)
 
@@ -388,7 +388,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(cell, 2, buy_num_second, investment_num[2], total, total_purchase_cost, balance),sellbtclick2()],
+                    command=lambda:[partial(sell, 2, buy_num_second, investment_num[2], total, total_purchase_cost, balance),sellbtclick2()],
                     font=tradefont)
     sell_bt2.place(x=500, y=390)
 
@@ -441,7 +441,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(cell, 3, buy_num_third, investment_num[3], total, total_purchase_cost, balance),sellbtclick3()],
+                    command=lambda:[partial(sell, 3, buy_num_third, investment_num[3], total, total_purchase_cost, balance),sellbtclick3()],
                     font=tradefont)
     sell_bt3.place(x=500, y=480)
 
@@ -492,7 +492,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(cell, 4, buy_num_fourth, investment_num[4], total, total_purchase_cost, balance),sellbtclick4()],
+                    command=lambda:[partial(sell, 4, buy_num_fourth, investment_num[4], total, total_purchase_cost, balance),sellbtclick4()],
                     font=tradefont)
     sell_bt4.place(x=500, y=570)
 
@@ -508,7 +508,8 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='black',
                     activeforeground='white',
-                    command=lambda:[partial(next_turn, current_date, time_num),partial(rate_of_fluctuation, investment, balance, total, total_current_cost),btreset()],
+                    command=lambda:[next_turn(current_date, time_num), rate_of_fluctuation(balance, total, total_current_cost), btreset()],
+                    #command=lambda:[partial(next_turn, current_date, time_num),partial(rate_of_fluctuation, investment, balance, total, total_current_cost),btreset()],
                     font=tradefont)
     next_bt.place(x=400, y=670)
 
