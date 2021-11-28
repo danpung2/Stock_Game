@@ -14,6 +14,11 @@ def gameStart(start_date, start_balance):
     global total
     global item
     global investment
+    global investment_num
+    
+    global current_date
+    global current_time
+    global time_num
 
     window = Tk()
     window.geometry('1200x800')
@@ -33,7 +38,12 @@ def gameStart(start_date, start_balance):
         var3.set(total_purchase_cost)
 
     item = {1 : 100000, 2 : 200000, 3 : 300000, 4 : 400000}
+    investment_num = {1 : 0, 2 : 0, 3 : 0, 4 : 0}
     investment = {1 : 0, 2 : 0, 3 : 0, 4 : 0}
+    
+    current_date = 1
+    current_time = ['아침', '점심', '저녁']
+    time_num = 0
 
     canvas = Canvas(window)
 
@@ -48,12 +58,12 @@ def gameStart(start_date, start_balance):
     #날짜
 
     date_lb = Label(window,
-                    text='N일차/{0}일'.format(start_date),
+                    text='1일차/{0}일'.format(start_date),
                     font=datefont)
     date_lb.place(x=50, y=50)
 
     date_lb = Label(window,
-                    text='아침/점심/저녁',
+                    text=current_time[time_num],
                     font=datefont)
     date_lb.place(x=50, y=80)
 
@@ -104,6 +114,7 @@ def gameStart(start_date, start_balance):
             return
         else:
             window.total = 0
+            investment_num[item_num] += buy_num_int
             investment[item_num] += buy_num_int * item[item_num]
             total_purchase_cost += buy_num_int * item[item_num]
             balance -= buy_num_int * item[item_num]
@@ -118,6 +129,17 @@ def gameStart(start_date, start_balance):
         num_ent2.delete(0, END)
         num_ent3.delete(0, END)
         num_ent4.delete(0, END)
+    
+    def cell(item_num, cell_num, input_balance, total, total_purchase_cost, balance):
+        cell_num_int=int(cell_num.get())
+        if(input_balance < cell_num_int):
+            return
+    
+    def next_turn(current_date, time_num):
+        if(time_num==2):
+            current_date+=1
+            time_num=-1
+        time_num+=1
 
     def rate_of_fluctuation(investment, balance, total, total_current_cost):
         for i in range(1, 5):
@@ -161,22 +183,22 @@ def gameStart(start_date, start_balance):
     myinvest_lb.place(x=700, y=335)
 
     myinvest_lb1 = Label(window,
-                        text='종목1: {0}'.format(investment[1]),
+                        text='종목1: {0} / 보유액: {1}'.format(investment_num[1], investment[1]),
                         font=tradefont)
     myinvest_lb1.place(x=700, y=380)
 
     myinvest_lb2 = Label(window,
-                        text='종목2: {0}'.format(investment[2]),
+                        text='종목2: {0} / 보유액: {1}'.format(investment_num[2], investment[2]),
                         font=tradefont)
     myinvest_lb2.place(x=700, y=420)
 
     myinvest_lb3 = Label(window,
-                        text='종목3: {0}'.format(investment[3]),
+                        text='종목3: {0} / 보유액: {1}'.format(investment_num[3], investment[3]),
                         font=tradefont)
     myinvest_lb3.place(x=700, y=460)
 
     myinvest_lb4 = Label(window,
-                        text='종목4: {0}'.format(investment[4]),
+                        text='종목4: {0} / 보유액: {1}'.format(investment_num[4], investment[4]),
                         font=tradefont)
     myinvest_lb4.place(x=700, y=500)
 
@@ -327,6 +349,7 @@ def gameStart(start_date, start_balance):
                     justify='center',
                     textvariable=buy_num_second,
                     font=tradefont)
+    
     num_ent2.place(x=310,
                 y=390,
                 width=80,
@@ -468,7 +491,7 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='black',
                     activeforeground='white',
-                    command=lambda:[btreset()],
+                    command=lambda:[partial(next_turn, current_date, time_num),btreset()],
                     font=tradefont)
     next_bt.place(x=400, y=670)
 
