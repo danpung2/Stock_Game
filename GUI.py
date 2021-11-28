@@ -58,7 +58,7 @@ def gameStart(start_date, start_balance):
     #날짜
 
     date_lb = Label(window,
-                    text='1일차/{0}일'.format(start_date),
+                    text='{1}일차/{0}일'.format(start_date, current_date),
                     font=datefont)
     date_lb.place(x=50, y=50)
 
@@ -130,10 +130,27 @@ def gameStart(start_date, start_balance):
         num_ent3.delete(0, END)
         num_ent4.delete(0, END)
     
-    def cell(item_num, cell_num, input_balance, total, total_purchase_cost, balance):
+    def cell(item_num, cell_num, investment_num, total, total_purchase_cost, balance):
         cell_num_int=int(cell_num.get())
-        if(input_balance < cell_num_int):
+        if(investment_num < cell_num_int):
             return
+        else:
+            window.total = 0
+            investment_num[item_num] -= cell_num_int
+            investment[item_num] -= cell_num_int * item[item_num]
+            total_purchase_cost -= cell_num_int * item[item_num]
+            balance += cell_num_int * item[item_num]
+            for i in range(1, 5):
+                total += investment[i]
+            window.total += balance
+            window.balance = balance
+            capital_lb1.configure(text = '총 자본    : {0}'.format(window.total))
+            wallet_lb1.configure(text = '지갑         : {0}'.format(window.balance))
+            investment_lb1.configure(text = '총 투자액 : {0}'.format(total_purchase_cost))
+        num_ent1.delete(0, END)
+        num_ent2.delete(0, END)
+        num_ent3.delete(0, END)
+        num_ent4.delete(0, END)
     
     def next_turn(current_date, time_num):
         if(time_num==2):
@@ -173,7 +190,7 @@ def gameStart(start_date, start_balance):
     earnrate_lb1.place(x=700, y=290)
 
     earnrate_lb2 = Label(window,
-                        text='수익률',
+                        text='{0}%'.format(total/start_balance*100-100),
                         font=tradefont)
     earnrate_lb2.place(x=790, y=290)
 
@@ -317,7 +334,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[sellbtclick1()],
+                    command=lambda:[partial(cell, 1, buy_num_first, investment_num[1], total, total_purchase_cost, balance),sellbtclick1()],
                     font=tradefont)
     sell_bt1.place(x=500, y=300)
 
@@ -371,7 +388,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[sellbtclick2()],
+                    command=lambda:[partial(cell, 2, buy_num_second, investment_num[2], total, total_purchase_cost, balance),sellbtclick2()],
                     font=tradefont)
     sell_bt2.place(x=500, y=390)
 
@@ -424,7 +441,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[sellbtclick3()],
+                    command=lambda:[partial(cell, 3, buy_num_third, investment_num[3], total, total_purchase_cost, balance),sellbtclick3()],
                     font=tradefont)
     sell_bt3.place(x=500, y=480)
 
@@ -466,7 +483,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(buy, 4, buy_num_third, balance, total, total_purchase_cost, balance),buybtclick4()],
+                    command=lambda:[partial(buy, 4, buy_num_fourth, balance, total, total_purchase_cost, balance),buybtclick4()],
                     font=tradefont)
     buy_bt4.place(x=400, y=570)
 
@@ -475,7 +492,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[sellbtclick4()],
+                    command=lambda:[partial(cell, 4, buy_num_fourth, investment_num[4], total, total_purchase_cost, balance),sellbtclick4()],
                     font=tradefont)
     sell_bt4.place(x=500, y=570)
 
@@ -491,7 +508,7 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='black',
                     activeforeground='white',
-                    command=lambda:[partial(next_turn, current_date, time_num),btreset()],
+                    command=lambda:[partial(next_turn, current_date, time_num),partial(rate_of_fluctuation, investment, balance, total, total_current_cost),btreset()],
                     font=tradefont)
     next_bt.place(x=400, y=670)
 
