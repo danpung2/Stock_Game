@@ -27,6 +27,7 @@ def gameStart(start_date, start_balance):
     var1 = StringVar()    
     var2 = StringVar()
     var3 = StringVar()
+    var4 = StringVar()
 
     if(total_current_cost == 0):
         balance = start_balance
@@ -42,8 +43,9 @@ def gameStart(start_date, start_balance):
     investment = {1 : 0, 2 : 0, 3 : 0, 4 : 0}
     
     current_date = 1
-    current_time = ['아침', '점심', '저녁']
     time_num = 0
+    
+    var4.set("아침")
 
     canvas = Canvas(window)
 
@@ -58,14 +60,14 @@ def gameStart(start_date, start_balance):
     #날짜
 
     date_lb = Label(window,
-                    text='{1}일차/{0}일'.format(start_date, current_date),
+                    text='{1}일차/{0}일'.format(start_date,current_date),
                     font=datefont)
     date_lb.place(x=50, y=50)
 
-    date_lb = Label(window,
-                    text=current_time[time_num],
+    date_2b = Label(window,
+                    text=var4.get(),
                     font=datefont)
-    date_lb.place(x=50, y=80)
+    date_2b.place(x=50, y=80)
 
     # 게임 이름
 
@@ -88,7 +90,7 @@ def gameStart(start_date, start_balance):
 
 
     wallet_lb1 = Label(window,
-                        text = '지갑         : ' + var2.get(),
+                        text = '지갑        : ' + var2.get(),
                         font=capitalfont)
     wallet_lb1.place(x=700, y=85)
 
@@ -108,69 +110,108 @@ def gameStart(start_date, start_balance):
     #                 font=capitalfont)
     # investment_lb2.place(x=850, y=120)
 
-    def buy(item_num, buy_num, input_balance, total, total_purchase_cost, balance):
-        buy_num_int = int(buy_num.get())
-        if(input_balance < (buy_num_int) * item[item_num]):
+    def buy(item_num, buy_num):
+        global balance
+        global total_purchase_cost
+        global investment
+        global investment_num
+        buy_num_int = int(buy_num)
+        if(balance < (buy_num_int) * item[item_num]):
+            num_ent1.delete(0, END)
+            num_ent2.delete(0, END)
+            num_ent3.delete(0, END)
+            num_ent4.delete(0, END)
             return
         else:
-            window.total = 0
             investment_num[item_num] += buy_num_int
-            investment[item_num] += buy_num_int * item[item_num]
-            total_purchase_cost += buy_num_int * item[item_num]
-            balance -= buy_num_int * item[item_num]
-            for i in range(1, 5):
-                total += investment[i]
-            window.total += balance
-            window.balance = balance
-            capital_lb1.configure(text = '총 자본    : {0}'.format(window.total))
-            wallet_lb1.configure(text = '지갑         : {0}'.format(window.balance))
+            investment[item_num] += buy_num_int*item[item_num]
+            total_purchase_cost += buy_num_int*item[item_num]
+            balance -= buy_num_int*item[item_num]
+            wallet_lb1.configure(text = '지갑        : {0}'.format(balance))
             investment_lb1.configure(text = '총 투자액 : {0}'.format(total_purchase_cost))
         num_ent1.delete(0, END)
         num_ent2.delete(0, END)
         num_ent3.delete(0, END)
         num_ent4.delete(0, END)
+        myinvest_lb1.configure(text='종목1: {0} / 보유액: {1}'.format(investment_num[1], investment[1]))
+        myinvest_lb2.configure(text='종목2: {0} / 보유액: {1}'.format(investment_num[2], investment[2]))
+        myinvest_lb3.configure(text='종목3: {0} / 보유액: {1}'.format(investment_num[3], investment[3]))
+        myinvest_lb4.configure(text='종목4: {0} / 보유액: {1}'.format(investment_num[4], investment[4]))
     
-    def sell(item_num, cell_num, investment_num, total, total_purchase_cost, balance):
-        sell_num_int=int(cell_num.get())
-        if(investment_num < sell_num_int):
+    def sell(item_num, sell_num):
+        global balance
+        global total_purchase_cost
+        global investment
+        global investment_num
+        sell_num_int=int(sell_num)
+        if(investment_num[item_num] < sell_num_int):
+            num_ent1.delete(0, END)
+            num_ent2.delete(0, END)
+            num_ent3.delete(0, END)
+            num_ent4.delete(0, END)
             return
         else:
-            window.total = 0
             investment_num[item_num] -= sell_num_int
-            investment[item_num] -= sell_num_int * item[item_num]
-            total_purchase_cost -= sell_num_int * item[item_num]
-            balance += sell_num_int * item[item_num]
-            for i in range(1, 5):
-                total += investment[i]
-            window.total += balance
-            window.balance = balance
-            capital_lb1.configure(text = '총 자본    : {0}'.format(window.total))
-            wallet_lb1.configure(text = '지갑         : {0}'.format(window.balance))
+            investment[item_num] -= sell_num_int*item[item_num]
+            total_purchase_cost -= sell_num_int*item[item_num]
+            balance += sell_num_int*item[item_num]
+            wallet_lb1.configure(text = '지갑        : {0}'.format(balance))
             investment_lb1.configure(text = '총 투자액 : {0}'.format(total_purchase_cost))
         num_ent1.delete(0, END)
         num_ent2.delete(0, END)
         num_ent3.delete(0, END)
         num_ent4.delete(0, END)
+        myinvest_lb1.configure(text='종목1: {0} / 보유액: {1}'.format(investment_num[1], investment[1]))
+        myinvest_lb2.configure(text='종목2: {0} / 보유액: {1}'.format(investment_num[2], investment[2]))
+        myinvest_lb3.configure(text='종목3: {0} / 보유액: {1}'.format(investment_num[3], investment[3]))
+        myinvest_lb4.configure(text='종목4: {0} / 보유액: {1}'.format(investment_num[4], investment[4]))
     
-    def next_turn(current_date, time_num):
+    def next_turn():
+        global current_date
+        global time_num
         if(time_num==2):
             current_date+=1
             time_num=-1
+            var4.set("아침")
+        elif(time_num==1):
+            var4.set("저녁")
+        elif(time_num==0):
+            var4.set("점심")
         time_num+=1
-
-    def rate_of_fluctuation(balance, total, total_current_cost):
+        date_lb.configure(text = '{1}일차/{0}일'.format(start_date, current_date))
+        date_2b.configure(text = var4.get())
+        
+    def rate_of_fluctuation():
+        global total
+        global balance
+        global total_purchase_cost
+        global investment
+        global item
+        total = 0
         for i in range(1, 5):
             fluctuation = random.randint(1, 10)
             if(fluctuation <= 5):
-                window.investment[i] *= (fluctuation * 10)/100 + 1
-                window.item[i] *= (fluctuation * 10)/100 + 1
+                investment[i] *= (fluctuation * 10)/100 + 1 
+                item[i] *= (fluctuation * 10)/100 + 1
             else:
-                window.investment[i] *= 1 - ((10-fluctuation) * 10)/100
-                window.item[i] *= 1 - ((10-fluctuation) * 10)/100
+                investment[i] *= 1 - ((10-fluctuation) * 10)/100
+                item[i] *= 1 - ((10-fluctuation) * 10)/100
         for i in range(1, 5):
-            total += window.investment[i]
-            total_current_cost += window.investment[i]
+            total += investment[i]
+            total_purchase_cost += investment[i]
         total += balance
+        current_ent1.configure(text = item[1])
+        current_ent1.configure(text = item[2])
+        current_ent1.configure(text = item[3])
+        current_ent1.configure(text = item[4])
+        earnrate_lb2.configure(text='{0}%'.format((total/start_balance*100)-100))
+        myinvest_lb1.configure(text='종목1: {0} / 보유액: {1}'.format(investment_num[1], investment[1]))
+        myinvest_lb2.configure(text='종목2: {0} / 보유액: {1}'.format(investment_num[2], investment[2]))
+        myinvest_lb3.configure(text='종목3: {0} / 보유액: {1}'.format(investment_num[3], investment[3]))
+        myinvest_lb4.configure(text='종목4: {0} / 보유액: {1}'.format(investment_num[4], investment[4]))
+        investment_lb1.configure(text = '총 투자액 : {0}'.format(total_purchase_cost))
+        capital_lb1.configure(text = '총 자본    :{0}'.format(total))
+
 
     #리포트
 
@@ -325,7 +366,7 @@ def gameStart(start_date, start_balance):
                     activebackground='blue',
                     activeforeground='white',
                     bg="lightgray",
-                    command=lambda:[partial(buy, 1, buy_num_first, balance, total, total_purchase_cost, balance), buybtclick1()],
+                    command=lambda:[buy(1, buy_num_first.get()),buybtclick1()],
                     font=tradefont)
     buy_bt1.place(x=400, y=300)
 
@@ -334,7 +375,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(sell, 1, buy_num_first, investment_num[1], total, total_purchase_cost, balance),sellbtclick1()],
+                    command=lambda:[sell(1, buy_num_first.get()),sellbtclick1()],
                     font=tradefont)
     sell_bt1.place(x=500, y=300)
 
@@ -379,7 +420,7 @@ def gameStart(start_date, start_balance):
                     activebackground='blue',
                     activeforeground='white',
                     bg="lightgray",
-                    command=lambda:[partial(buy, 2, buy_num_second, balance, total, total_purchase_cost, balance), buybtclick2()],
+                    command=lambda:[buy(2, buy_num_second.get()),buybtclick2()],
                     font=tradefont)
     buy_bt2.place(x=400, y=390)
 
@@ -388,7 +429,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(sell, 2, buy_num_second, investment_num[2], total, total_purchase_cost, balance),sellbtclick2()],
+                    command=lambda:[sell(2, buy_num_second.get()),sellbtclick2()],
                     font=tradefont)
     sell_bt2.place(x=500, y=390)
 
@@ -432,7 +473,7 @@ def gameStart(start_date, start_balance):
                     activebackground='blue',
                     activeforeground='white',
                     bg="lightgray",
-                    command=lambda:[partial(buy, 3, buy_num_third, balance, total, total_purchase_cost, balance),buybtclick3()],
+                    command=lambda:[buy(3, buy_num_third.get()),buybtclick3()],
                     font=tradefont)
     buy_bt3.place(x=400, y=480)
 
@@ -441,7 +482,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(sell, 3, buy_num_third, investment_num[3], total, total_purchase_cost, balance),sellbtclick3()],
+                    command=lambda:[sell(3, buy_num_third.get()),sellbtclick3()],
                     font=tradefont)
     sell_bt3.place(x=500, y=480)
 
@@ -483,7 +524,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(buy, 4, buy_num_fourth, balance, total, total_purchase_cost, balance),buybtclick4()],
+                    command=lambda:[buy(4, buy_num_fourth.get()),buybtclick4()],
                     font=tradefont)
     buy_bt4.place(x=400, y=570)
 
@@ -492,7 +533,7 @@ def gameStart(start_date, start_balance):
                     width=6,
                     height=2,
                     bg="lightgray",
-                    command=lambda:[partial(sell, 4, buy_num_fourth, investment_num[4], total, total_purchase_cost, balance),sellbtclick4()],
+                    command=lambda:[sell(4, buy_num_fourth.get()),sellbtclick4()],
                     font=tradefont)
     sell_bt4.place(x=500, y=570)
 
@@ -508,8 +549,7 @@ def gameStart(start_date, start_balance):
                     height=2,
                     activebackground='black',
                     activeforeground='white',
-                    command=lambda:[next_turn(current_date, time_num), rate_of_fluctuation(balance, total, total_current_cost), btreset()],
-                    #command=lambda:[partial(next_turn, current_date, time_num),partial(rate_of_fluctuation, investment, balance, total, total_current_cost),btreset()],
+                    command=lambda:[next_turn(),rate_of_fluctuation(),btreset()],
                     font=tradefont)
     next_bt.place(x=400, y=670)
 
